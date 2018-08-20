@@ -1,97 +1,74 @@
-# t1 targets
+# ｈａｃｋｍｕｄ
 
-- accenture
-- amal_robo
-- bluebun
-- halperyon
-- nuutec
-- protein_prevention
-- ros13
-- suborbital_airlines
+In this repository I put some scripts I developed for the game hackmud.
+Maybe they are useful maybe not, you are free to test, change or fork.
 
-# t2 targets
+## Diretories
 
-- bunnybat_hut
-- setec_gas
-- suborbital_airlines
-- weyland
+### include
 
-# strange targets
+Here are some functions that are useful in a lot of scripts.
+To make them reusable they are separated into extra files.
+I tried to use some prefixes to do extra grouping.
 
-- `blackstar` generates scripts that don't exist
+Prefix | Meaning
+--- | ---
+fmt_ | formatting of values or objects, useful for displaying
+nfo_ | get additional info for a value (e.g. level of script)
 
-# shortcuts
+### tools
 
-    /u = sys.upgrades
-    /fs = scripts.fullsec
-    /hl = kernel.hardline
-    /dc = kernel.hardline {dc:true}
-    /lock = mode{m:"lock"}
-    /dev = mode{m:"dev"}
-    /us = scripts.user
+Scripts that beautifies your game experience.
 
-# safe targets
+Name | Usage
+--- | ---
+access_log.js | parses your access log and displays it slightly different
+bank_statement.js | parses your transactions and displays a bank statement
+call.js | calls the given scriptor with the given arguments and displays some additional info
+market_browse.js | parses the available upgrades on the market and displays the cheapest item ob each type and rarity
+qr_decode.js | decodes a QR code
 
-- nuutec
-- suborbital_airlines
-- weyland
+### hacking
 
-# db notes
+Scripts for hacking usage, e.g. lockpicks, locscraping.
 
-From [here](https://www.hackmud.com/forums/new_players/how_to_script_please_):
+### poc
 
-- count: #db.c()
-- insert: #db.i()
-- update: #db.u()
-- remove: #db.r()
-- find: #db.f()
-- findAndModify: #db.m()
-- save: #db.s()
+Proof of concepts, here are some special tools that are not really useful but
+to test some functions.
 
-## example db usage
+### example
 
-    function(c,a) {
-        // Remove any old test documents.
-        #db.r({ script:"test" })
-        // Insert a new test document.
-        #db.i({ script:"test", value:"myvalue" })
-        // Save an update to the existing test document.
-        #db.s({ script:"test", value:"mynewvalue" })
-        // Return the test document.
-        return #db.f({ script:"test" }).first()
-    }
+Some examples like `hello_world` and a mockup for a lib
 
-# items
+## Usage
 
-    tier_1 lock         c001
-    tier_1 lock         c002
-    tier_1 lock         c003
-    tier_1 lock         ez_21
-    tier_1 lock         ez_35
-    tier_1 lock         ez_40
-    tier_1 lock         w4rn
-    tier_1 script       w4rn_message
-    tier_1 script       expose_access_log_v1
-    tier_1 script       log_writer_v1
-    tier_1 script_space script_slot_v1
-    tier_1 script_space char_count_v1
-    tier_1 script_space public_script_v1
+```bash
+$ npm install
+$ npm run-script build
+```
 
-# various commands
+This builds, lints and shrinks the scripts and place the results in `release` directory.
+You can copy the file directly to your scripts folder.
+Depending on your operating system this is `%APPDATA%\hackmud\<username>\scripts\` (Windows) or `$HOME/.config/hackmud/<username>/scripts/` (Linux & Mac).
+The upload them with `#up <scriptname>`.
 
-    sys.migrate      // bypass the tutorial
-    sys.status       // get system status
-    accts.xfer_gc_to // transfer money to another account
+### Static build
 
-# how to t2
+```bash
+$ npm run-script build -- static
+```
 
-1. Find a FULLSEC entry, look at the pages, get usernames.
-1. Find a HIGHSEC/MIDSEC entry for the same user.
-1. Execute the following command and find a username where this works: `user.script {username:"theuser", action:"order_qrs"}`
-1. Parse the QR codes and find the ID.
+This includes all library functions, no lib is generated.
 
-# useful links
+### Dynamic build
 
-- [How to find t2 NPCs](http://steamcommunity.com/sharedfiles/filedetails/?id=771040875)
-- [Decoding small QR codes by hand](http://blog.qartis.com/decoding-small-qr-codes-by-hand/)
-- [How to Read QR Symbols Without Your Mobile Telephone](http://www.ams.org/samplings/feature-column/fc-2013-02)
+```bash
+$ npm run-script build -- dynamic --user=<username> [--lib=<include> --lib=<include> ...]
+```
+
+This generates a lib with the defined includes, wich is used by the other generated scripts.
+
+## Todo
+
+* Automatically determine include per library (create library)
